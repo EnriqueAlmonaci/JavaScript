@@ -1,9 +1,9 @@
 var display = document.getElementById('display');
 var cantidad = "";
 var cantidades = [];
-var operacion = "";
 var resultado = 0;
 var ciclos = 0;
+var ultimaop = "", ultimonum = "";
 var Calculadora = document.querySelectorAll("img");
 for (var i=0;i<Calculadora.length;i++)
 {
@@ -24,10 +24,11 @@ if (btn)
     switch (btn.id) {
       case "on":
         cantidad = "";
-        operacion = "";
         resultado = 0;
         cantidades = [];
         ciclos = 0;
+        ultimaop = "";
+        ultimonum = "";
         display.innerHTML = "0";
         break;
       case "1":
@@ -36,10 +37,9 @@ if (btn)
             cantidad = cantidad;
           }
           else {
-
             cantidad = cantidad + "1";
+
           }
-          cantidades.push(cantidad);
           display.innerHTML = cantidad;
           break;
       case "2":
@@ -50,7 +50,6 @@ if (btn)
           else {
             cantidad = cantidad + "2";
           }
-          cantidades.push(cantidad);
           display.innerHTML = cantidad;
           break;
       case "3":
@@ -61,7 +60,6 @@ if (btn)
           else {
             cantidad = cantidad + "3";
           }
-          cantidades.push(cantidad);
           display.innerHTML = cantidad;
           break;
       case "4":
@@ -72,7 +70,6 @@ if (btn)
           else {
             cantidad = cantidad + "4";
           }
-          cantidades.push(cantidad);
           display.innerHTML = cantidad;
           break;
       case "5":
@@ -83,7 +80,6 @@ if (btn)
           else {
             cantidad = cantidad + "5";
           }
-          cantidades.push(cantidad);
           display.innerHTML = cantidad;
           break;
       case "6":
@@ -94,7 +90,6 @@ if (btn)
           else {
             cantidad = cantidad + "6";
           }
-          cantidades.push(cantidad);
           display.innerHTML = cantidad;
           break;
       case "7":
@@ -105,7 +100,6 @@ if (btn)
           else {
             cantidad = cantidad + "7";
           }
-          cantidades.push(cantidad);
           display.innerHTML = cantidad;
           break;
       case "8":
@@ -116,7 +110,6 @@ if (btn)
           else {
             cantidad = cantidad + "8";
           }
-          cantidades.push(cantidad);
           display.innerHTML = cantidad;
           break;
       case "9":
@@ -127,7 +120,6 @@ if (btn)
           else {
             cantidad = cantidad + "9";
           }
-          cantidades.push(cantidad);
           display.innerHTML = cantidad;
           break;
       case "0":
@@ -144,12 +136,11 @@ if (btn)
             else {
               cantidad = cantidad + "0";
             }
-            cantidades.push(cantidad);
             display.innerHTML = cantidad;
         }
         break;
       case "punto":
-      if (cantidad == 0)
+      if (cantidad == "0")
       {
           cantidad = "";
           display.innerHTML = "0";
@@ -165,32 +156,31 @@ if (btn)
             cantidad = cantidad;
           }
           else {
-            cantidad = cantidad + ".";
-          }
-          cantidades.push(cantidad);
+                cantidad = cantidad + ".";
+
+                if (cantidades.length >= 1)
+                {
+                    cantidades = [];
+                }
+
+              }
+
           display.innerHTML = cantidad;
         }
       }
         break;
       case "sign":
-        if (cantidad == 0)
+        if (cantidad == "0")
         {
           cantidad = "";
           display.innerHTML = "0";
         }
         else {
           if(cantidad.indexOf('-') != -1){
-              if (resultado != 0)
-              {
-                cantidad = resultado.toString();
-                cantidades.push(cantidad);
-                display.innerHTML = cantidad;
-              }
-              else {
+
                 cantidad = cantidad.substring(1,cantidad.length);
-                cantidades.push(cantidad);
                 display.innerHTML = cantidad;
-              }
+
           }
           else {
               if (cantidad.length == 8)
@@ -205,86 +195,210 @@ if (btn)
 
               }
               else {
-                if (resultado != 0)
+                if (resultado != 0 && cantidad == "")
                 {
-                  cantidad = "-" + resultado.toString();
+                  if (resultado < 0)
+                  {
+                    resultado = Math.abs(resultado);
+                    cantidades.splice(0,1, resultado);
+                    cantidad = "";
+                    display.innerHTML = resultado.toString().substring(0,8);
+                  }
+                  else {
+
+                      resultado = eval(resultado * -1);
+                      cantidades.splice(0,1, resultado);
+                      cantidad = "";
+                      display.innerHTML = resultado.toString().substring(0,8);
+                  }
+
                 }
                 else {
                     cantidad = "-" + cantidad;
+                    display.innerHTML = cantidad;
                 }
 
               }
-              cantidades.push(cantidad);
-              display.innerHTML = cantidad;
+
           }
         }
         break;
         case "mas":
-          operacion = "suma";
-          cantidades.push("+");
-          if (cantidad == 0)
+          if (cantidad == "0")
           {
             cantidad = 0;
 
-          }else {
+          }else if (cantidad == "" && cantidades.length == 0){
 
-              cantidad = "";
+            cantidades.push("0");
+            cantidades.push("+");
+            cantidad = "";
+          }
+          else if (cantidad != "" && cantidades.length > 0);
+          {
+
+            if ( cantidades[0] == "0")
+            {
+              cantidades.splice(1,1,"+");
+            }
+            else {
+              cantidades.push(cantidad);
+              cantidades.push("+");
+            }
+            cantidad = "";
+          }
+          if (ciclos > 0)
+          {
+            ciclos = 0;
           }
           display.innerHTML = cantidad;
           break;
         case "menos":
-          operacion = "resta";
-          cantidades.push("-");
-          if (cantidad == 0)
+          if (cantidad == "0")
           {
             cantidad = 0;
 
-          }else {
+          }else if (cantidad == "" && cantidades.length == 0){
 
-              cantidad = "";
+            cantidades.push("0");
+            cantidades.push("-");
+            cantidad = "";
+          }
+          else if (cantidad != "" && cantidades.length > 0);
+          {
+            if ( cantidades[0] == "0")
+            {
+              cantidades.splice(1,1,"-");
+            }
+            else {
+              cantidades.push(cantidad);
+              cantidades.push("-");
+            }
+            cantidad = "";
+          }
+          if (ciclos > 0)
+          {
+            ciclos = 0;
           }
           display.innerHTML = cantidad;
           break;
         case "por":
-         operacion = "multiplica";
-          cantidades.push("*");
-          if (cantidad == 0)
+          if (cantidad == "0")
           {
             cantidad = 0;
 
-          }else {
+          }else if (cantidad == "" && cantidades.length == 0){
 
-              cantidad = "";
+            cantidades.push("0");
+            cantidades.push("*");
+            cantidades.push("0");
+            cantidad = "";
+          }
+          else if (cantidad != "" && cantidades.length > 0);
+          {
+            if ( cantidades[0] == "0")
+            {
+              cantidades.splice(1,1,"*");
+            }
+            else {
+              cantidades.push(cantidad);
+              cantidades.push("*");
+            }
+            cantidad = "";
+          }
+          if (ciclos > 0)
+          {
+            ciclos = 0;
           }
           display.innerHTML = cantidad;
           break;
         case "dividido":
-          operacion = "divide";
-          cantidades.push("/");
-          if (cantidad == 0)
+          if (cantidad == "0")
           {
             cantidad = 0;
 
-          }else {
+          }else if (cantidad == "" && cantidades.length == 0){
 
-              cantidad = "";
+            cantidades.push("0");
+            cantidades.push("/");
+            cantidades.push("0");
+            cantidad = "";
+          }
+          else if (cantidad != "" && cantidades.length > 0);
+          {
+            if ( cantidades[0] == "0")
+            {
+              cantidades.splice(1,1,"/");
+            }
+            else {
+              cantidades.push(cantidad);
+              cantidades.push("/");
+            }
+            cantidad = "";
+          }
+          if (ciclos > 0)
+          {
+            ciclos = 0;
           }
           display.innerHTML = cantidad;
         break;
         case "igual":
-        if (ciclos == 0)
+
+        if (cantidades[2] == "0")
         {
-          ciclos = ciclos + 1;
+          if (cantidad != "")
+          {
+              cantidades.splice(2,1,cantidad)
+          }
+
         }
         else {
-          var ultimaop = cantidades[cantidades.length-2];
-          var ultimonum = cantidades[cantidades.length-1];
-          cantidades.push(ultimaop);
-          cantidades.push(ultimonum);
+
+            if (cantidad != "" && ciclos == 0)
+            {
+                cantidades.push(cantidad);
+            }
+            else {
+
+                if(ciclos == 0)
+                {
+                  cantidades.push(cantidades[0]);
+                }
+                else {
+
+                  if (cantidades.length == 0 && cantidad != "")
+                  {
+                    cantidades.push(cantidad);
+                    ultimonum = cantidad;
+                  }
+
+                }
+            }
+
         }
 
-        display.innerHTML = opera(cantidades);
-        break;
+
+        if (cantidades.length >= 3)
+        {
+           ultimaop = cantidades[cantidades.length-2];
+           ultimonum = cantidades[cantidades.length-1];
+
+        }
+        else {
+          if (ciclos > 0 && ultimaop != "" && ultimonum != "")
+          {
+            cantidades.push(ultimaop);
+            cantidades.push(ultimonum);
+          }
+
+        }
+          res = opera(cantidades);
+          display.innerHTML = res.toString().substring(0,8);
+          cantidades = [];
+          cantidad = "";
+          cantidades.push(res)
+          ciclos = ciclos + 1;
+          break;
         default:
     }
 }
